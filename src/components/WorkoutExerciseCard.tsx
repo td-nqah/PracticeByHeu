@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Barbell,
   CheckCircle,
-  Square,
   ShieldCheck,
   Sparkle,
   Waves,
@@ -16,6 +15,7 @@ import {
   ListBullets,
 } from '@phosphor-icons/react';
 import type { WorkoutSession, ExerciseItem, DayKey, RoutineProgress } from '../types';
+import { AnimatedCheckbox } from './AnimatedCheckbox';
 
 interface WorkoutExerciseCardProps {
   workout: WorkoutSession;
@@ -214,22 +214,15 @@ export function WorkoutExerciseCard({
                     </div>
                   </div>
 
-                  {/* Master Checkbox Toggle */}
-                  <button
-                    onClick={() => onToggleExercise(currentExercise.id)}
-                    className={`p-2.5 rounded-xl transition-all cursor-pointer flex-shrink-0 ${
-                      isCurrentExDone
-                        ? 'text-emerald-400 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                        : 'text-stone-500 hover:text-stone-300 bg-[#1D2130] hover:bg-[#252B40] border border-white/[0.08]'
-                    }`}
-                    title={isCurrentExDone ? 'Bỏ chọn' : 'Đánh dấu hoàn thành bài này'}
-                  >
-                    {isCurrentExDone ? (
-                      <CheckCircle size={24} weight="fill" />
-                    ) : (
-                      <Square size={24} weight="bold" />
-                    )}
-                  </button>
+                  {/* Master Checkbox Toggle (Uiverse.io Animated SVG Checkbox) */}
+                  <div className="p-1 rounded-2xl bg-[#141824] border border-white/[0.08] hover:border-white/[0.18] transition-all flex items-center justify-center flex-shrink-0">
+                    <AnimatedCheckbox
+                      checked={isCurrentExDone}
+                      onChange={() => onToggleExercise(currentExercise.id)}
+                      size="2.1em"
+                      title={isCurrentExDone ? 'Bỏ chọn bài này' : 'Đánh dấu hoàn thành bài này'}
+                    />
+                  </div>
                 </div>
 
                 {/* Technique tip */}
@@ -251,7 +244,7 @@ export function WorkoutExerciseCard({
                   </div>
                 )}
 
-                {/* Interactive Set Buttons */}
+                {/* Interactive Set Checkboxes */}
                 {setsCount && setsCount <= 10 && (
                   <div className="pt-2.5 border-t border-white/[0.06]">
                     <span className="text-[10px] uppercase font-bold text-stone-400 block mb-2">
@@ -263,17 +256,22 @@ export function WorkoutExerciseCard({
                         const isSetDone = isCurrentExDone || !!progress[setKey];
 
                         return (
-                          <button
+                          <div
                             key={sIdx}
                             onClick={() => onToggleSet(currentExercise.id, sIdx)}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 ${
                               isSetDone
-                                ? 'bg-emerald-500 text-black shadow-[0_0_12px_rgba(16,185,129,0.5)] border border-emerald-400'
-                                : 'bg-[#1D2130] hover:bg-[#282F44] text-stone-300 border border-white/[0.08]'
+                                ? 'bg-emerald-950/30 text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
+                                : 'bg-[#1D2130] hover:bg-[#282F44] text-stone-300 border-white/[0.08]'
                             }`}
                           >
-                            {isSetDone ? '✓ ' : ''}Hiệp {sIdx + 1}
-                          </button>
+                            <AnimatedCheckbox
+                              checked={isSetDone}
+                              onChange={() => onToggleSet(currentExercise.id, sIdx)}
+                              size="1.25em"
+                            />
+                            <span>Hiệp {sIdx + 1}</span>
+                          </div>
                         );
                       })}
                     </div>

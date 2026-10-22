@@ -273,3 +273,55 @@
       426.5px 6480px;
   }
 }
+
+/* ========================================================== */
+/* FROM UIVERSE.IO BY SelfMadeSystem - ANIMATED SVG CHECKBOX  */
+/* ========================================================== */
+.uiverse-checkbox-container,
+label.container {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.uiverse-checkbox-container input,
+label.container input {
+  display: none;
+}
+
+.uiverse-checkbox-container svg,
+label.container svg {
+  overflow: visible;
+  display: block;
+}
+
+.uiverse-path,
+.path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.45);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease, stroke 0.3s ease;
+  stroke-dasharray: 241 9999999;
+  stroke-dashoffset: 0;
+}
+
+.uiverse-checkbox-container:hover .uiverse-path,
+label.container:hover .path {
+  stroke: #ffffff;
+}
+
+.uiverse-checkbox-container input:checked ~ svg .path,
+.uiverse-checkbox-container input:checked ~ svg .uiverse-path,
+label.container input:checked ~ svg .path {
+  stroke: #10B981;
+  stroke-dasharray: 70.5096664428711 9999999;
+  stroke-dashoffset: -262.2723388671875;
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.65));
+}
+
