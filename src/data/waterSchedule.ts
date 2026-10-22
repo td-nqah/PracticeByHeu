@@ -11,7 +11,7 @@ export type WaterSlotType =
 export interface WaterSlot {
   id: string;
   timeRange: string;
-  startMinutes: number; // Phút tính từ 00:00 (ví dụ 05:30 = 330)
+  startMinutes: number; // Phút tính từ 00:00 (ví dụ 06:00 = 360)
   endMinutes: number;   // Phút kết thúc khung giờ
   targetMl: number;
   title: string;
@@ -28,6 +28,8 @@ export interface DailyWaterPlan {
   modeName: string;
   modeShortDescription: string;
   wakeUpTime: string;
+  sleepWindow?: string;
+  powerNapWindow?: string;
   dailyTargetMl: number; // 3200 ml
   pureWaterTargetMl: number; // ~2800+ ml
   beverageTargetMl: number;  // 330 - 390 ml
@@ -35,25 +37,31 @@ export interface DailyWaterPlan {
 }
 
 /**
- * CHẾ ĐỘ A: Dành cho ngày học ca sáng (Thứ 3, Thứ 5, Thứ 6 - Thức dậy 05:15)
+ * CHẾ ĐỘ A: Dành cho ngày học ca sáng (Thứ 3, Thứ 5, Thứ 6)
+ * - Giờ thức dậy: 06:00
+ * - Thời lượng ngủ đêm: 23:00 – 06:00 (7 tiếng)
+ * - Power Nap trưa: 12:45 – 13:25 (40 phút)
+ * - Tổng lượng nước: 3.200 ml/ngày
  */
 export const WATER_MODE_A: DailyWaterPlan = {
   mode: 'MODE_A',
   modeName: 'Chế độ A: Ca học sáng',
-  modeShortDescription: 'Áp dụng Thứ 3, Thứ 5, Thứ 6 (Thức dậy 05:15, học sáng)',
-  wakeUpTime: '05:15',
+  modeShortDescription: 'Áp dụng Thứ 3, Thứ 5, Thứ 6 (Thức dậy 06:00, học sáng)',
+  wakeUpTime: '06:00',
+  sleepWindow: '23:00 – 06:00 (7 tiếng)',
+  powerNapWindow: '12:45 – 13:25 (40 phút)',
   dailyTargetMl: 3200,
   pureWaterTargetMl: 2870,
   beverageTargetMl: 330,
   slots: [
     {
       id: 'slot-a-1',
-      timeRange: '05:30',
-      startMinutes: 5 * 60 + 30, // 330
-      endMinutes: 6 * 60 + 30,
+      timeRange: '06:00',
+      startMinutes: 6 * 60, // 360
+      endMinutes: 7 * 60,
       targetMl: 350,
       title: 'Thức dậy & Khởi động',
-      purpose: 'Nước ấm đánh thức hệ tiêu hóa và bù dịch sau giấc ngủ đêm dài.',
+      purpose: 'Nước ấm khởi động ngày mới, đánh thức hệ tiêu hóa và bù dịch sau giấc ngủ đêm.',
       type: 'warm-water',
       badgeLabel: 'Nước ấm khởi động',
     },
@@ -63,10 +71,10 @@ export const WATER_MODE_A: DailyWaterPlan = {
       startMinutes: 8 * 60 + 30, // 510
       endMinutes: 9 * 60 + 30,
       targetMl: 500,
-      title: 'Giờ nghỉ giải lao ca học',
-      purpose: 'Uống nhấp từng ngụm nhỏ giữ ẩm thanh quản và duy trì sự tỉnh táo.',
+      title: 'Nước lọc giữa ca học',
+      purpose: 'Nước lọc giữa ca học: Uống nhấp từng ngụm nhỏ giữ ẩm thanh quản và duy trì sự tỉnh táo.',
       type: 'pure-water',
-      badgeLabel: 'Nước lọc',
+      badgeLabel: 'Nước lọc ca học',
     },
     {
       id: 'slot-a-3',
@@ -75,9 +83,9 @@ export const WATER_MODE_A: DailyWaterPlan = {
       endMinutes: 12 * 60 + 45,
       targetMl: 350,
       title: 'Sau bữa trưa',
-      purpose: 'Uống cách bữa ăn 15–20 phút để hỗ trợ tiêu hóa, không làm loãng dịch vị.',
+      purpose: 'Sau bữa trưa: Uống cách bữa ăn 15–20 phút để hỗ trợ tiêu hóa, không làm loãng dịch vị.',
       type: 'pure-water',
-      badgeLabel: 'Nước lọc',
+      badgeLabel: 'Nước lọc sau trưa',
     },
     {
       id: 'slot-a-4',
@@ -86,7 +94,7 @@ export const WATER_MODE_A: DailyWaterPlan = {
       endMinutes: 15 * 60,
       targetMl: 330,
       title: 'Đầu giờ chiều',
-      purpose: '1 lon Pepsi Chanh Zero (0 calo) hoặc thức uống yêu thích giúp sảng khoái.',
+      purpose: 'Pepsi Chanh Zero (0 calo): Thức uống yêu thích giải nhiệt sảng khoái sau giấc ngủ trưa.',
       type: 'beverage',
       badgeLabel: 'Pepsi Zero 0 kcal',
       isBeverage: true,
@@ -98,7 +106,7 @@ export const WATER_MODE_A: DailyWaterPlan = {
       endMinutes: 17 * 60 + 30,
       targetMl: 600,
       title: 'Khung tập luyện / Bơi lội',
-      purpose: 'Nhấp đều từng ngụm giữa các hiệp tập, bù điện giải & mồ hôi tiêu hao.',
+      purpose: 'Bù nước trong khung giờ tập luyện/bơi lội: Nhấp đều giữa các hiệp tập, bù điện giải & mồ hôi.',
       type: 'workout-hydration',
       badgeLabel: 'Bù nước tập luyện',
     },
@@ -109,9 +117,9 @@ export const WATER_MODE_A: DailyWaterPlan = {
       endMinutes: 20 * 60,
       targetMl: 400,
       title: 'Sau bữa tối',
-      purpose: 'Hỗ trợ dạ dày chuyển hóa dinh dưỡng, chuẩn bị thư giãn buổi tối.',
+      purpose: 'Sau bữa tối: Cấp ẩm, hỗ trợ dạ dày hấp thụ dưỡng chất và chuyển hóa năng lượng.',
       type: 'pure-water',
-      badgeLabel: 'Nước lọc',
+      badgeLabel: 'Nước lọc sau tối',
     },
     {
       id: 'slot-a-7',
@@ -120,9 +128,9 @@ export const WATER_MODE_A: DailyWaterPlan = {
       endMinutes: 21 * 60,
       targetMl: 200,
       title: 'Chốt sổ ban đêm',
-      purpose: 'Uống ngụm nhỏ. Sau 21:00 ngưng uống lượng nước lớn để bảo vệ giấc ngủ sâu.',
+      purpose: 'Chốt sổ ban đêm, uống ngụm nhỏ. Cảnh báo ngưng uống lượng nước lớn sau 21:00 để ngủ sâu.',
       type: 'bedtime',
-      badgeLabel: 'Ngắt nước trước ngủ',
+      badgeLabel: 'Chốt sổ ban đêm',
     },
   ],
 };
@@ -135,6 +143,8 @@ export const WATER_MODE_B: DailyWaterPlan = {
   modeName: 'Chế độ B: Ca học chiều-tối',
   modeShortDescription: 'Áp dụng Thứ 2, Thứ 4 (Thức dậy 07:30, học ca dài 12:00 – 21:00)',
   wakeUpTime: '07:30',
+  sleepWindow: '23:30 – 07:30 (8 tiếng)',
+  powerNapWindow: 'Nghỉ ngơi trước giờ lên lớp',
   dailyTargetMl: 3200,
   pureWaterTargetMl: 2870,
   beverageTargetMl: 330,
@@ -217,6 +227,8 @@ export const WATER_MODE_C: DailyWaterPlan = {
   modeName: 'Chế độ C: Cuối tuần tự do',
   modeShortDescription: 'Áp dụng Thứ 7 & Chủ Nhật (Tập trung bơi lội & phục hồi tích cực)',
   wakeUpTime: '08:00',
+  sleepWindow: '23:30 – 08:00 (8.5 tiếng)',
+  powerNapWindow: '13:30 – 14:15 (45 phút)',
   dailyTargetMl: 3200,
   pureWaterTargetMl: 2870,
   beverageTargetMl: 330,
@@ -293,9 +305,9 @@ export const WATER_MODE_C: DailyWaterPlan = {
 
 /**
  * Mapping hàm chọn chế độ phân bổ nước theo ngày trong tuần:
- * - Thứ 3 (tue), Thứ 5 (thu), Thứ 6 (fri) -> Chế độ A
- * - Thứ 2 (mon), Thứ 4 (wed) -> Chế độ B
- * - Thứ 7 (sat), Chủ Nhật (sun) -> Chế độ C
+ * - Thứ 3 (Tue), Thứ 5 (Thu), Thứ 6 (Fri) -> Chế độ A
+ * - Thứ 2 (Mon), Thứ 4 (Wed) -> Chế độ B
+ * - Thứ 7 (Sat), Chủ Nhật (Sun) -> Chế độ C
  */
 export function getWaterPlanForDay(dayKey: DayKey): DailyWaterPlan {
   switch (dayKey) {

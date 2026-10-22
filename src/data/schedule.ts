@@ -51,7 +51,7 @@ export const WEEKLY_ROUTINES: DayRoutine[] = [
       timeRange: '06:00 - 09:00',
       title: 'Ca học Sáng sớm',
       timeSlotDescription: 'Ca học 3 tiếng buổi sáng. Buổi chiều thuận lợi cho 60 phút bơi lội toàn diện.',
-      notes: 'Thức dậy 05:15, ăn sáng nhẹ và uống một cốc nước ấm trước khi đi học.',
+      notes: 'Thức dậy 06:00, uống cốc nước ấm 350ml khởi động ngày mới trước khi vào ca học.',
     },
     workout: {
       timeRange: '16:30 - 17:30',
@@ -141,7 +141,7 @@ export const WEEKLY_ROUTINES: DayRoutine[] = [
       timeRange: '06:00 - 11:00',
       title: 'Ca học Sáng (Chiều rảnh)',
       timeSlotDescription: 'Học từ 6h đến 11h sáng. Buổi chiều hoàn toàn rảnh rỗi thuận lợi cho buổi tập trọng điểm 75 phút.',
-      notes: 'Tan học lúc 11:00, ăn trưa lúc 11:45 và ngủ trưa 1 tiếng để chuẩn bị sức lực.',
+      notes: 'Tan học lúc 11:00, ăn trưa lúc 11:45 và Power Nap 40 phút (12:45 – 13:25) trước buổi tập chính.',
     },
     workout: {
       timeRange: '16:00 - 17:15',

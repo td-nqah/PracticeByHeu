@@ -135,20 +135,33 @@ export function WaterTrackerCard({
           </button>
         </div>
 
-        {/* Schedule Mode Description Banner */}
-        <div className="p-3 rounded-2xl bg-[#141824]/90 border border-white/[0.06] flex items-center justify-between text-xs gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)] flex-shrink-0" />
-            <span className="font-bold text-white truncate">{plan.modeName}</span>
-          </div>
-          <div className="flex items-center gap-2 text-[11px] flex-shrink-0">
-            <span className="text-cyan-400 font-bold font-mono-numbers">
+        {/* Schedule Mode Description & Sleep/Nap Banner */}
+        <div className="p-3 rounded-2xl bg-[#141824]/90 border border-white/[0.06] space-y-2 text-xs">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)] flex-shrink-0" />
+              <span className="font-bold text-white truncate">{plan.modeName}</span>
+            </div>
+            <span className="text-cyan-400 font-bold font-mono-numbers text-[11px] flex-shrink-0">
               3.200 ml/ngày
             </span>
-            <span className="text-stone-500 hidden sm:inline">•</span>
-            <span className="text-stone-400 hidden sm:inline">
-              Dậy: {plan.wakeUpTime}
+          </div>
+
+          {/* Sleep, Wakeup & Power Nap tags */}
+          <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
+            <span className="px-2 py-0.5 rounded-lg bg-[#181E2E] border border-white/[0.06] text-stone-300 font-medium">
+              ⏰ Thức dậy: <strong className="text-white">{plan.wakeUpTime}</strong>
             </span>
+            {plan.sleepWindow && (
+              <span className="px-2 py-0.5 rounded-lg bg-[#181E2E] border border-white/[0.06] text-stone-300 font-medium">
+                🌙 Ngủ đêm: <strong className="text-indigo-300">{plan.sleepWindow}</strong>
+              </span>
+            )}
+            {plan.powerNapWindow && (
+              <span className="px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 font-medium">
+                ⚡ Nap trưa: <strong>{plan.powerNapWindow}</strong>
+              </span>
+            )}
           </div>
         </div>
 
