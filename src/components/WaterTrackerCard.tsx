@@ -11,6 +11,7 @@ import {
   Waves,
   Coffee,
   X,
+  CaretDown,
 } from '@phosphor-icons/react';
 import type { DayKey } from '../types';
 import {
@@ -21,9 +22,14 @@ import {
 interface WaterTrackerCardProps {
   dayKey: DayKey;
   dayLabelVi: string;
+  targetHeight?: number;
 }
 
-export function WaterTrackerCard({ dayKey, dayLabelVi }: WaterTrackerCardProps) {
+export function WaterTrackerCard({
+  dayKey,
+  dayLabelVi,
+  targetHeight,
+}: WaterTrackerCardProps) {
   const plan = useMemo(() => getWaterPlanForDay(dayKey), [dayKey]);
   const [isUrineModalOpen, setIsUrineModalOpen] = useState(false);
 
@@ -82,161 +88,166 @@ export function WaterTrackerCard({ dayKey, dayLabelVi }: WaterTrackerCardProps) 
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-[#0E111A]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] transition-all duration-300 flex flex-col h-full">
+    <div
+      style={
+        targetHeight
+          ? { height: `${targetHeight}px`, maxHeight: `${targetHeight}px` }
+          : undefined
+      }
+      className="relative overflow-hidden rounded-3xl bg-[#0E111A]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] transition-all duration-200 flex flex-col h-full max-h-[580px] lg:max-h-none"
+    >
       {/* Top ambient glow line: Cyan to Deep Indigo */}
-      <div className="h-1.5 w-full bg-gradient-to-r from-cyan-400 via-[#818CF8] to-[#5E6AD2]" />
+      <div className="h-1.5 w-full bg-gradient-to-r from-cyan-400 via-[#818CF8] to-[#5E6AD2] flex-shrink-0" />
 
-      <div className="p-5 sm:p-6 space-y-4 flex-1 flex flex-col justify-between">
-        {/* ======================================================== */}
-        {/* HEADER: TITLE, BADGES, AND ACTION BUTTONS               */}
-        {/* ======================================================== */}
-        <div className="space-y-3.5">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)] flex-shrink-0">
-                <Drop size={22} weight="fill" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-400">
-                    HYDRATION SCHEDULE
-                  </span>
-                  <span className="text-stone-600">•</span>
-                  <span className="text-[11px] font-medium text-stone-400">
-                    {dayLabelVi}
-                  </span>
-                </div>
-                <h2 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
-                  Khung Giờ Uống Nước
-                </h2>
-              </div>
+      {/* ======================================================== */}
+      {/* HEADER SECTION (FIXED AT TOP, DOES NOT SCROLL)          */}
+      {/* ======================================================== */}
+      <div className="p-5 sm:p-6 pb-2.5 space-y-3 flex-shrink-0">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)] flex-shrink-0">
+              <Drop size={22} weight="fill" />
             </div>
-
-            {/* Urine Color Test Button */}
-            <button
-              onClick={() => setIsUrineModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141824] hover:bg-[#1C2234] border border-white/[0.08] hover:border-cyan-500/40 text-xs font-semibold text-stone-300 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95 flex-shrink-0"
-              title="Thước đo kiểm tra màu nước tiểu"
-            >
-              <Eye size={15} weight="bold" className="text-cyan-400" />
-              <span>Màu nước tiểu</span>
-            </button>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-400">
+                  HYDRATION SCHEDULE
+                </span>
+                <span className="text-stone-600">•</span>
+                <span className="text-[11px] font-medium text-stone-400">
+                  {dayLabelVi}
+                </span>
+              </div>
+              <h2 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
+                Khung Giờ Uống Nước
+              </h2>
+            </div>
           </div>
 
-          {/* Schedule Mode Description Banner */}
-          <div className="p-3 rounded-2xl bg-[#141824]/90 border border-white/[0.06] flex items-center justify-between text-xs gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)] flex-shrink-0" />
-              <span className="font-bold text-white truncate">{plan.modeName}</span>
-            </div>
-            <div className="flex items-center gap-2 text-[11px] flex-shrink-0">
-              <span className="text-cyan-400 font-bold font-mono-numbers">
-                3.200 ml/ngày
-              </span>
-              <span className="text-stone-500 hidden sm:inline">•</span>
-              <span className="text-stone-400 hidden sm:inline">
-                Dậy: {plan.wakeUpTime}
-              </span>
-            </div>
-          </div>
+          {/* Urine Color Test Button */}
+          <button
+            onClick={() => setIsUrineModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141824] hover:bg-[#1C2234] border border-white/[0.08] hover:border-cyan-500/40 text-xs font-semibold text-stone-300 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95 flex-shrink-0"
+            title="Thước đo kiểm tra màu nước tiểu"
+          >
+            <Eye size={15} weight="bold" className="text-cyan-400" />
+            <span>Màu nước tiểu</span>
+          </button>
         </div>
 
-        {/* ======================================================== */}
-        {/* TIME SLOT LIST (READ-ONLY REFERENCE TIMELINE)           */}
-        {/* ======================================================== */}
-        <div className="space-y-2 flex-1">
-          <div className="flex items-center justify-between px-1 mb-1">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
-              <Clock size={13} weight="bold" className="text-cyan-400" />
-              <span>Lịch trình nạp nước trong ngày</span>
-            </h3>
-            <span className="text-[11px] font-medium text-stone-400">
-              {plan.slots.length} khung giờ cố định
+        {/* Schedule Mode Description Banner */}
+        <div className="p-3 rounded-2xl bg-[#141824]/90 border border-white/[0.06] flex items-center justify-between text-xs gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)] flex-shrink-0" />
+            <span className="font-bold text-white truncate">{plan.modeName}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px] flex-shrink-0">
+            <span className="text-cyan-400 font-bold font-mono-numbers">
+              3.200 ml/ngày
+            </span>
+            <span className="text-stone-500 hidden sm:inline">•</span>
+            <span className="text-stone-400 hidden sm:inline">
+              Dậy: {plan.wakeUpTime}
             </span>
           </div>
-
-          <div className="space-y-2">
-            {plan.slots.map((slot) => {
-              const isCurrent = slot.id === currentSlotId;
-
-              return (
-                <div
-                  key={slot.id}
-                  className={`group relative p-2.5 sm:p-3 rounded-2xl border transition-all flex items-start justify-between gap-3 ${
-                    isCurrent
-                      ? 'bg-[#141A28] border-cyan-500/40 shadow-[0_0_20px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500/30'
-                      : 'bg-[#121520]/80 border-white/[0.06] hover:bg-[#161B28] hover:border-white/[0.1]'
-                  }`}
-                >
-                  {/* Left: Slot Type Icon & Content */}
-                  <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                    <div className="w-7 h-7 rounded-lg bg-[#161B28] border border-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {getSlotIcon(slot.type)}
-                    </div>
-
-                    <div className="min-w-0 space-y-0.5 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {/* Time Range */}
-                        <span
-                          className={`font-mono-numbers text-xs font-black tracking-tight ${
-                            isCurrent ? 'text-cyan-300' : 'text-white'
-                          }`}
-                        >
-                          {slot.timeRange}
-                        </span>
-
-                        {/* Current Slot Badge */}
-                        {isCurrent && (
-                          <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 animate-pulse">
-                            Đang diễn ra
-                          </span>
-                        )}
-
-                        {/* Beverage / Badge tag */}
-                        {slot.badgeLabel && (
-                          <span
-                            className={`text-[10px] font-semibold px-2 py-0.2 rounded-md ${
-                              slot.isBeverage
-                                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                : slot.type === 'workout-hydration'
-                                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                : 'bg-[#181E2E] text-stone-300 border border-white/[0.08]'
-                            }`}
-                          >
-                            {slot.badgeLabel}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Purpose Description */}
-                      <p className="text-xs text-stone-300 leading-relaxed">
-                        {slot.purpose}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Right: Target Volume Badge */}
-                  <div className="flex flex-col items-end flex-shrink-0 pt-0.5">
-                    <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-[#161B28] border border-white/[0.08]">
-                      <span className="font-mono-numbers text-xs font-bold text-white">
-                        {slot.targetMl} ml
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
 
+        {/* Subhead with scroll hint */}
+        <div className="flex items-center justify-between px-1 pt-1">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
+            <Clock size={13} weight="bold" className="text-cyan-400" />
+            <span>Lịch trình nạp nước trong ngày</span>
+          </h3>
+          <span className="text-[10px] font-medium text-cyan-400/80 flex items-center gap-0.5">
+            <span>Vuốt để xem</span>
+            <CaretDown size={11} weight="bold" className="animate-bounce" />
+          </span>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SCROLLABLE / SWIPEABLE TIME SLOTS CONTAINER              */}
+      {/* ======================================================== */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-5 sm:px-6 pb-5 sm:pb-6 space-y-2.5 custom-scrollbar touch-pan-y overscroll-contain">
+        {plan.slots.map((slot) => {
+          const isCurrent = slot.id === currentSlotId;
+
+          return (
+            <div
+              key={slot.id}
+              className={`group relative p-2.5 sm:p-3 rounded-2xl border transition-all flex items-start justify-between gap-3 ${
+                isCurrent
+                  ? 'bg-[#141A28] border-cyan-500/40 shadow-[0_0_20px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500/30'
+                  : 'bg-[#121520]/80 border-white/[0.06] hover:bg-[#161B28] hover:border-white/[0.1]'
+              }`}
+            >
+              {/* Left: Slot Type Icon & Content */}
+              <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                <div className="w-7 h-7 rounded-lg bg-[#161B28] border border-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  {getSlotIcon(slot.type)}
+                </div>
+
+                <div className="min-w-0 space-y-0.5 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Time Range */}
+                    <span
+                      className={`font-mono-numbers text-xs font-black tracking-tight ${
+                        isCurrent ? 'text-cyan-300' : 'text-white'
+                      }`}
+                    >
+                      {slot.timeRange}
+                    </span>
+
+                    {/* Current Slot Badge */}
+                    {isCurrent && (
+                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 animate-pulse">
+                        Đang diễn ra
+                      </span>
+                    )}
+
+                    {/* Beverage / Badge tag */}
+                    {slot.badgeLabel && (
+                      <span
+                        className={`text-[10px] font-semibold px-2 py-0.2 rounded-md ${
+                          slot.isBeverage
+                            ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                            : slot.type === 'workout-hydration'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            : 'bg-[#181E2E] text-stone-300 border border-white/[0.08]'
+                        }`}
+                      >
+                        {slot.badgeLabel}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Purpose Description */}
+                  <p className="text-xs text-stone-300 leading-relaxed">
+                    {slot.purpose}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Target Volume Badge */}
+              <div className="flex flex-col items-end flex-shrink-0 pt-0.5">
+                <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-[#161B28] border border-white/[0.08]">
+                  <span className="font-mono-numbers text-xs font-bold text-white">
+                    {slot.targetMl} ml
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
         {/* ======================================================== */}
-        {/* NIGHT CUTOFF SMART ALERT (After 20:30)                   */}
+        {/* NIGHT CUTOFF SMART ALERT (Inside scrollable container)   */}
         {/* ======================================================== */}
         {isNightCutoffActive && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-3.5 rounded-2xl bg-amber-950/30 border border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.12)] space-y-1 mt-2"
+            className="p-3.5 rounded-2xl bg-amber-950/30 border border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.12)] space-y-1 mt-3"
           >
             <div className="flex items-center gap-2">
               <Warning size={16} weight="fill" className="text-amber-400 flex-shrink-0" />
@@ -249,6 +260,13 @@ export function WaterTrackerCard({ dayKey, dayLabelVi }: WaterTrackerCardProps) 
             </p>
           </motion.div>
         )}
+
+        {/* Bottom subtle indicator */}
+        <div className="text-center pt-2 pb-1">
+          <span className="text-[10px] text-stone-500 font-medium">
+            Đã hiển thị toàn bộ {plan.slots.length} khung giờ phân bổ
+          </span>
+        </div>
       </div>
 
       {/* ======================================================== */}

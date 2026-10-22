@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import {
   ArrowsClockwise,
   ListBullets,
@@ -122,6 +122,33 @@ export default function App() {
     year: 'numeric',
   }).format(new Date());
 
+  // Measure right column height on desktop to synchronize water card height exactly
+  const rightColumnRef = useRef<HTMLDivElement>(null);
+  const [rightColumnHeight, setRightColumnHeight] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const el = rightColumnRef.current;
+    if (!el) return;
+
+    const syncHeight = () => {
+      if (typeof window !== 'undefined' && window.innerWidth >= 1024 && el) {
+        setRightColumnHeight(el.offsetHeight);
+      } else {
+        setRightColumnHeight(undefined);
+      }
+    };
+
+    syncHeight();
+    const ro = new ResizeObserver(syncHeight);
+    ro.observe(el);
+    window.addEventListener('resize', syncHeight);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', syncHeight);
+    };
+  }, [activeDay]);
+
   return (
     <div className="min-h-[100dvh] bg-transparent text-[#F9FAFB] flex flex-col font-sans relative selection:bg-[#5E6AD2]/30 selection:text-[#C4B5FD] overflow-x-hidden">
       {/* Black Rain Background Animation Effect */}
@@ -185,16 +212,17 @@ export default function App() {
 
         {/* Core 2-Column Bento Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* CỘT TRÁI: KHUNG GIỜ UỐNG NƯỚC (Đẩy lên ngang hàng với cột phải) */}
-          <div className="lg:col-span-5">
+          {/* CỘT TRÁI: KHUNG GIỜ UỐNG NƯỚC (Chiều dài bằng đúng 2 card bên phải, vuốt/cuộn để xem) */}
+          <div className="lg:col-span-5 h-full">
             <WaterTrackerCard
               dayKey={activeDay}
               dayLabelVi={activeRoutine.dayLabelVi}
+              targetHeight={rightColumnHeight}
             />
           </div>
 
           {/* CỘT PHẢI: KẾ HOẠCH CHI TIẾT (THU GỌN) + BÀI TẬP CAROUSEL */}
-          <div className="lg:col-span-7 space-y-5">
+          <div ref={rightColumnRef} className="lg:col-span-7 space-y-5">
             {/* Card 1: Kế Hoạch Chi Tiết (Thu gọn, dài ngang bằng card bài tập) */}
             <div className="p-5 sm:p-6 rounded-3xl bg-[#0E111A]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] relative overflow-hidden">
               {/* Subtle top glow line */}

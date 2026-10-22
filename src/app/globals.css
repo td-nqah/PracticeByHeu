@@ -78,6 +78,22 @@
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums lining-nums;
   }
+
+  /* Custom slim scrollbar for swipeable/scrollable cards */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(129, 140, 248, 0.4);
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(129, 140, 248, 0.7);
+  }
 }
 
 /* ========================================================== */
