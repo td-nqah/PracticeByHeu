@@ -229,20 +229,20 @@ export function WorkoutExerciseCard({
                 </div>
 
                 {/* Technique tip */}
-                <div className="p-3 rounded-xl bg-[#10131E] border border-white/[0.04] text-xs text-stone-300 leading-relaxed mb-3">
-                  <strong className="text-[#818CF8] font-semibold block mb-0.5">
+                <div className="p-3 rounded-xl bg-[#10131E] border border-white/[0.04] text-stone-300 leading-relaxed mb-3">
+                  <strong className="text-[#818CF8] font-semibold block mb-1">
                     Kỹ thuật thực hiện:
                   </strong>
-                  {currentExercise.techniqueTip}
+                  <p>{currentExercise.techniqueTip}</p>
                 </div>
 
                 {/* Knee safety note */}
                 {currentExercise.kneeSafetyNote && (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 mb-3 flex items-start gap-2">
-                    <ShieldCheck size={16} weight="fill" className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 mb-3 flex items-start gap-2">
+                    <ShieldCheck size={16} weight="fill" className="text-emerald-400 flex-shrink-0 mt-1" />
                     <div>
-                      <strong className="font-semibold">Bảo vệ khớp gối: </strong>
-                      {currentExercise.kneeSafetyNote}
+                      <strong className="font-semibold block mb-0.5">Bảo vệ khớp gối:</strong>
+                      <p>{currentExercise.kneeSafetyNote}</p>
                     </div>
                   </div>
                 )}
