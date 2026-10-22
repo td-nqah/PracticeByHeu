@@ -110,12 +110,12 @@ export function WorkoutExerciseCard({
         {/* ======================================================== */}
         {/* CAROUSEL HEADER: HIỂN THỊ TỔNG SỐ CARD & BÀI HIỆN TẠI   */}
         {/* ======================================================== */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-[#5E6AD2]/20 border border-[#5E6AD2]/40 flex items-center justify-center text-[#818CF8] shadow-xs">
               <ListBullets size={15} weight="bold" />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="text-xs font-bold text-white uppercase tracking-wider">
                 BÀI TẬP
               </span>
@@ -125,7 +125,7 @@ export function WorkoutExerciseCard({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-2 text-[11px] sm:text-xs">
             <span className="text-stone-400">
               Tổng cộng: <strong className="text-white font-mono-numbers">{totalCards} bài</strong>
             </span>
@@ -188,26 +188,26 @@ export function WorkoutExerciseCard({
                 }`}
               >
                 {/* Top Info of the Exercise */}
-                <div className="flex items-start justify-between gap-3 mb-3.5">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#1F2332] border border-white/[0.08] flex items-center justify-center flex-shrink-0 shadow-xs mt-0.5">
+                <div className="flex items-start justify-between gap-2.5 sm:gap-3 mb-3.5">
+                  <div className="flex items-start gap-2.5 sm:gap-3 min-w-0 flex-1">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#1F2332] border border-white/[0.08] flex items-center justify-center flex-shrink-0 shadow-xs mt-0.5">
                       {getEquipmentIcon(currentExercise.equipment)}
                     </div>
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono-numbers text-xs font-bold text-[#818CF8] bg-[#5E6AD2]/15 px-2 py-0.5 rounded-md border border-[#5E6AD2]/30">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <span className="font-mono-numbers text-[11px] sm:text-xs font-bold text-[#818CF8] bg-[#5E6AD2]/15 px-2 py-0.5 rounded-md border border-[#5E6AD2]/30 shrink-0">
                           Card #{safeIndex + 1}
                         </span>
                         <h4
-                          className={`text-base font-bold ${
+                          className={`text-sm sm:text-base font-bold leading-snug break-words ${
                             isCurrentExDone ? 'line-through text-stone-500' : 'text-white'
                           }`}
                         >
                           {currentExercise.name}
                         </h4>
                       </div>
-                      <div className="mt-1.5 flex items-center gap-2">
-                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-[#212638] border border-white/[0.08] text-indigo-300">
+                      <div className="mt-1 flex items-center gap-2">
+                        <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-md bg-[#212638] border border-white/[0.08] text-indigo-300">
                           {currentExercise.target}
                         </span>
                       </div>
@@ -215,11 +215,14 @@ export function WorkoutExerciseCard({
                   </div>
 
                   {/* Master Checkbox Toggle (Uiverse.io Animated SVG Checkbox) */}
-                  <div className="p-1 rounded-2xl bg-[#141824] border border-white/[0.08] hover:border-white/[0.18] transition-all flex items-center justify-center flex-shrink-0">
+                  <div
+                    onClick={() => onToggleExercise(currentExercise.id)}
+                    className="p-1.5 rounded-xl bg-[#141824] hover:bg-[#1A2030] border border-white/[0.1] hover:border-[#818CF8]/50 transition-all flex items-center justify-center flex-shrink-0 cursor-pointer shadow-xs active:scale-95"
+                  >
                     <AnimatedCheckbox
                       checked={isCurrentExDone}
                       onChange={() => onToggleExercise(currentExercise.id)}
-                      size="2.1em"
+                      size="1.15em"
                       title={isCurrentExDone ? 'Bỏ chọn bài này' : 'Đánh dấu hoàn thành bài này'}
                     />
                   </div>
@@ -247,10 +250,15 @@ export function WorkoutExerciseCard({
                 {/* Interactive Set Checkboxes */}
                 {setsCount && setsCount <= 10 && (
                   <div className="pt-2.5 border-t border-white/[0.06]">
-                    <span className="text-[10px] uppercase font-bold text-stone-400 block mb-2">
-                      Đánh dấu từng hiệp tập:
-                    </span>
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
+                        Đánh dấu từng hiệp tập:
+                      </span>
+                      <span className="text-[10px] text-stone-500 font-medium">
+                        {setsCount} hiệp
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 sm:flex sm:flex-wrap items-center gap-2">
                       {Array.from({ length: setsCount }).map((_, sIdx) => {
                         const setKey = `${dayKey}-ex-${currentExercise.id}-s${sIdx}`;
                         const isSetDone = isCurrentExDone || !!progress[setKey];
@@ -259,18 +267,20 @@ export function WorkoutExerciseCard({
                           <div
                             key={sIdx}
                             onClick={() => onToggleSet(currentExercise.id, sIdx)}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 ${
+                            className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 min-w-0 ${
                               isSetDone
-                                ? 'bg-emerald-950/30 text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
-                                : 'bg-[#1D2130] hover:bg-[#282F44] text-stone-300 border-white/[0.08]'
+                                ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                                : 'bg-[#181D2B] hover:bg-[#23293D] text-stone-300 border-white/[0.08]'
                             }`}
                           >
                             <AnimatedCheckbox
                               checked={isSetDone}
                               onChange={() => onToggleSet(currentExercise.id, sIdx)}
-                              size="1.25em"
+                              size="0.95em"
                             />
-                            <span>Hiệp {sIdx + 1}</span>
+                            <span className="whitespace-nowrap font-medium text-[11px] sm:text-xs">
+                              Hiệp {sIdx + 1}
+                            </span>
                           </div>
                         );
                       })}

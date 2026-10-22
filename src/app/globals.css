@@ -2209,8 +2209,7 @@
 /* ========================================================== */
 /* FROM UIVERSE.IO BY SelfMadeSystem - ANIMATED SVG CHECKBOX  */
 /* ========================================================== */
-.uiverse-checkbox-container,
-label.container {
+.uiverse-checkbox-container {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -2218,17 +2217,17 @@ label.container {
   user-select: none;
   flex-shrink: 0;
   position: relative;
+  line-height: 0;
 }
 
-.uiverse-checkbox-container input,
-label.container input {
-  display: none;
+.uiverse-checkbox-container input {
+  display: none !important;
 }
 
-.uiverse-checkbox-container svg,
-label.container svg {
+.uiverse-checkbox-container svg {
   overflow: visible;
   display: block;
+  flex-shrink: 0;
 }
 
 .uiverse-path,
@@ -2238,22 +2237,21 @@ label.container svg {
   stroke-width: 6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease, stroke 0.3s ease;
+  transition: stroke-dasharray 0.45s cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 0.45s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.25s ease;
   stroke-dasharray: 241 9999999;
   stroke-dashoffset: 0;
 }
 
 .uiverse-checkbox-container:hover .uiverse-path,
-label.container:hover .path {
+.uiverse-checkbox-container:hover .path {
   stroke: #ffffff;
 }
 
 .uiverse-checkbox-container input:checked ~ svg .path,
-.uiverse-checkbox-container input:checked ~ svg .uiverse-path,
-label.container input:checked ~ svg .path {
+.uiverse-checkbox-container input:checked ~ svg .uiverse-path {
   stroke: #10B981;
   stroke-dasharray: 70.5096664428711 9999999;
   stroke-dashoffset: -262.2723388671875;
-  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.65));
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.7));
 }
 

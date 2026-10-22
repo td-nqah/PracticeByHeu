@@ -171,7 +171,7 @@ export default function App() {
                   v2.0
                 </span>
               </div>
-              <p className="text-[11px] text-stone-400 font-medium leading-none mt-1">
+              <p className="text-[11px] text-stone-400 font-medium leading-none mt-1 hidden sm:block">
                 Lịch Uống Nước & Kế Hoạch Luyện Tập Hàng Ngày
               </p>
             </div>
@@ -181,7 +181,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsOverviewOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-[#141824] hover:bg-[#1C2234] border border-white/[0.08] hover:border-[#818CF8]/40 text-xs font-bold text-stone-200 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-2xl bg-[#141824] hover:bg-[#1C2234] border border-white/[0.08] hover:border-[#818CF8]/40 text-xs font-bold text-stone-200 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95"
             >
               <ListBullets size={15} weight="bold" className="text-[#818CF8]" />
               <span className="hidden sm:inline">Lịch cả tuần</span>
@@ -200,7 +200,7 @@ export default function App() {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 relative z-10">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6 relative z-10">
         {/* Day Selector Dock */}
         <DaySelector
           routines={WEEKLY_ROUTINES}
@@ -211,9 +211,9 @@ export default function App() {
         />
 
         {/* Core 2-Column Bento Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
           {/* CỘT TRÁI: KHUNG GIỜ UỐNG NƯỚC (Chiều dài bằng đúng 2 card bên phải, vuốt/cuộn để xem) */}
-          <div className="lg:col-span-5 h-full">
+          <div className="lg:col-span-5 h-full w-full">
             <WaterTrackerCard
               dayKey={activeDay}
               dayLabelVi={activeRoutine.dayLabelVi}
@@ -222,7 +222,7 @@ export default function App() {
           </div>
 
           {/* CỘT PHẢI: KẾ HOẠCH CHI TIẾT (THU GỌN) + BÀI TẬP CAROUSEL */}
-          <div ref={rightColumnRef} className="lg:col-span-7 space-y-5">
+          <div ref={rightColumnRef} className="lg:col-span-7 space-y-4 sm:space-y-5 w-full">
             {/* Card 1: Kế Hoạch Chi Tiết (Thu gọn, dài ngang bằng card bài tập) */}
             <div className="p-5 sm:p-6 rounded-3xl bg-[#0E111A]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] relative overflow-hidden">
               {/* Subtle top glow line */}

@@ -91,7 +91,7 @@ export function DaySelector({
 
               {/* Day Label (e.g. T2, T3) */}
               <span
-                className={`relative z-10 text-[10px] sm:text-xs font-semibold uppercase tracking-wider transition-colors duration-150 ${
+                className={`relative z-10 text-[10px] sm:text-xs font-semibold uppercase tracking-wider transition-colors duration-150 hidden sm:block ${
                   isSelected
                     ? 'text-[#5E6AD2]'
                     : isToday
@@ -104,13 +104,19 @@ export function DaySelector({
 
               {/* Day Name */}
               <span
-                className={`relative z-10 text-xs sm:text-sm font-bold mt-0.5 tracking-tight transition-colors duration-150 ${
+                className={`relative z-10 text-xs sm:text-sm font-bold sm:mt-0.5 tracking-tight transition-colors duration-150 ${
                   isSelected
                     ? 'text-zinc-950 font-black'
                     : 'text-stone-300 group-hover:text-white'
                 }`}
               >
-                {routine.day === 'Sun' ? 'Chủ Nhật' : routine.dayLabelVi}
+                {/* Mobile: T2, T3... Desktop: Full label */}
+                <span className="sm:hidden">
+                  {routine.day === 'Sun' ? 'CN' : `T${routine.dayLabelVi.replace('Thứ ', '')}`}
+                </span>
+                <span className="hidden sm:inline">
+                  {routine.day === 'Sun' ? 'Chủ Nhật' : routine.dayLabelVi}
+                </span>
               </span>
 
               {/* Sub-indicator (Today badge) */}

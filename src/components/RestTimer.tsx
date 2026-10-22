@@ -47,23 +47,25 @@ export function RestTimer() {
   const progressPct = totalSeconds > 0 ? ((totalSeconds - secondsLeft) / totalSeconds) * 100 : 0;
 
   return (
-    <div className="bg-[#12141C] border border-white/[0.08] rounded-2xl p-3.5 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
-      <div className="flex items-center justify-between">
+    <div className="bg-[#12141C] border border-white/[0.08] rounded-2xl p-3 sm:p-3.5 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2.5 text-stone-200 font-semibold text-xs hover:text-[#C4B5FD] transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-stone-200 font-semibold text-xs hover:text-[#C4B5FD] transition-colors cursor-pointer text-left"
         >
-          <div className="w-7 h-7 rounded-lg bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#A78BFA] flex items-center justify-center shadow-xs">
+          <div className="w-7 h-7 rounded-lg bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#A78BFA] flex items-center justify-center shadow-xs shrink-0">
             <Timer size={15} weight="fill" />
           </div>
-          <span className="font-bold">Đồng hồ bấm giờ nghỉ giữa hiệp</span>
-          <span className="text-[11px] text-stone-500 font-normal">
-            {isRunning ? `(Đang chạy: ${secondsLeft}s)` : '(Bấm để mở)'}
-          </span>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="font-bold">Đồng hồ bấm giờ nghỉ giữa hiệp</span>
+            <span className="text-[11px] text-stone-500 font-normal">
+              {isRunning ? `(${secondsLeft}s)` : '(Bấm để mở)'}
+            </span>
+          </div>
         </button>
 
         {/* Quick launch pills */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 self-end sm:self-auto">
           {[30, 45, 60, 90].map((sec) => (
             <button
               key={sec}
