@@ -44,9 +44,9 @@ export function DaySelector({
         {activeDay !== todayKey && (
           <button
             onClick={() => onSelectDay(todayKey)}
-            className="text-xs font-semibold text-[#818CF8] hover:text-white bg-[#5E6AD2]/15 hover:bg-[#5E6AD2]/25 border border-[#5E6AD2]/30 px-3 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+            className="text-xs font-semibold text-cyan-300 hover:text-white bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 px-3 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
           >
-            <Sparkle size={12} weight="fill" />
+            <Sparkle size={12} weight="fill" className="text-cyan-400" />
             <span>Về Hôm nay</span>
           </button>
         )}
@@ -65,11 +65,11 @@ export function DaySelector({
               onClick={() => onSelectDay(routine.day)}
               className="relative flex flex-col items-center justify-center py-2.5 sm:py-3 px-1 rounded-xl sm:rounded-2xl transition-colors duration-150 cursor-pointer select-none group"
             >
-              {/* Animated Sliding Background Card (HÌNH CHỮ NHẬT BO TRÒN TRƯỢT SANG TRÁI / PHẢI) */}
+              {/* Animated Sliding Background Card (HÌNH CHỮ NHẬT BO TRÒN GRADIENT XANH/INDIGO GIỐNG NÚT BÀI TIẾP THEO) */}
               {isSelected && (
                 <motion.div
                   layoutId="active-day-card-pill"
-                  className="absolute inset-0 bg-white rounded-xl sm:rounded-2xl shadow-[0_0_25px_rgba(255,255,255,0.2)] border border-white/40"
+                  className="absolute inset-0 bg-gradient-to-r from-[#5E6AD2] to-[#818CF8] rounded-xl sm:rounded-2xl shadow-[0_0_20px_rgba(94,106,210,0.45)] border border-white/25"
                   transition={{
                     type: 'spring',
                     stiffness: 420,
@@ -84,7 +84,7 @@ export function DaySelector({
                   <CheckCircle
                     size={13}
                     weight="fill"
-                    className={isSelected ? 'text-emerald-600' : 'text-emerald-400 drop-shadow-[0_0_6px_rgba(16,185,129,0.5)]'}
+                    className={isSelected ? 'text-emerald-300 drop-shadow-xs' : 'text-emerald-400 drop-shadow-[0_0_6px_rgba(16,185,129,0.5)]'}
                   />
                 </div>
               )}
@@ -93,9 +93,9 @@ export function DaySelector({
               <span
                 className={`relative z-10 text-[10px] sm:text-xs font-semibold uppercase tracking-wider transition-colors duration-150 hidden sm:block ${
                   isSelected
-                    ? 'text-[#5E6AD2]'
+                    ? 'text-white/80 font-bold'
                     : isToday
-                    ? 'text-amber-400 group-hover:text-amber-300'
+                    ? 'text-cyan-400 group-hover:text-cyan-300 font-bold'
                     : 'text-stone-500 group-hover:text-stone-300'
                 }`}
               >
@@ -106,7 +106,9 @@ export function DaySelector({
               <span
                 className={`relative z-10 text-xs sm:text-sm font-bold sm:mt-0.5 tracking-tight transition-colors duration-150 ${
                   isSelected
-                    ? 'text-zinc-950 font-black'
+                    ? 'text-white font-extrabold drop-shadow-xs'
+                    : isToday
+                    ? 'text-white font-bold'
                     : 'text-stone-300 group-hover:text-white'
                 }`}
               >
@@ -125,8 +127,8 @@ export function DaySelector({
                   <span
                     className={`text-[9px] font-bold px-1.5 py-0.2 rounded-md uppercase tracking-tight transition-colors duration-150 ${
                       isSelected
-                        ? 'bg-[#5E6AD2]/10 text-[#5E6AD2]'
-                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                        ? 'bg-white/20 text-white border border-white/30'
+                        : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_8px_rgba(6,182,212,0.2)]'
                     }`}
                   >
                     Nay

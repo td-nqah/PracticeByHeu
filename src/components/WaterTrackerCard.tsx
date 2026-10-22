@@ -158,7 +158,7 @@ export function WaterTrackerCard({
               </span>
             )}
             {plan.powerNapWindow && (
-              <span className="px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 font-medium">
+              <span className="px-2 py-0.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 font-medium">
                 ⚡ Nap trưa: <strong>{plan.powerNapWindow}</strong>
               </span>
             )}
@@ -225,7 +225,7 @@ export function WaterTrackerCard({
                           slot.isBeverage
                             ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
                             : slot.type === 'workout-hydration'
-                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
                             : 'bg-[#181E2E] text-stone-300 border border-white/[0.08]'
                         }`}
                       >
@@ -260,15 +260,15 @@ export function WaterTrackerCard({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-3.5 rounded-2xl bg-amber-950/30 border border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.12)] space-y-1 mt-3"
+            className="p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 shadow-[0_0_20px_rgba(99,102,241,0.2)] space-y-1 mt-3"
           >
             <div className="flex items-center gap-2">
-              <Warning size={16} weight="fill" className="text-amber-400 flex-shrink-0" />
-              <h4 className="text-[11px] font-bold text-amber-300 uppercase tracking-wide">
+              <Warning size={16} weight="fill" className="text-indigo-400 flex-shrink-0" />
+              <h4 className="text-[11px] font-bold text-indigo-300 uppercase tracking-wide">
                 Nguyên Tắc Bảo Vệ Giấc Ngủ (Sau 20:30)
               </h4>
             </div>
-            <p className="text-xs text-amber-200/90 leading-relaxed pl-6">
+            <p className="text-xs text-indigo-200/90 leading-relaxed pl-6">
               Giới hạn nước dưới <strong>200ml</strong> và ngưng uống trước ngủ 60 phút để không phải thức giấc đi tiểu đêm, bảo vệ giấc ngủ sâu (Deep Sleep).
             </p>
           </motion.div>

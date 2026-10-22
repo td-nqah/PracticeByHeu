@@ -110,7 +110,7 @@ export function WeeklyOverviewModal({
                             {item.dayLabelVi}
                           </span>
                           {isToday && (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase">
                               Hôm nay
                             </span>
                           )}
@@ -140,12 +140,12 @@ export function WeeklyOverviewModal({
                       </div>
 
                       {/* Workout row */}
-                      <div className="flex items-center gap-2 text-xs text-stone-300 p-2 rounded-xl bg-[#1B1824] border border-amber-500/20">
-                        <Barbell size={16} weight="bold" className="text-amber-400 flex-shrink-0" />
-                        <span className="font-bold text-amber-300/80">Tập:</span>
+                      <div className="flex items-center gap-2 text-xs text-stone-300 p-2 rounded-xl bg-[#171B2A] border border-[#818CF8]/25">
+                        <Barbell size={16} weight="bold" className="text-[#818CF8] flex-shrink-0" />
+                        <span className="font-bold text-[#818CF8]/90">Tập:</span>
                         <span className="font-medium truncate flex-1">{item.workout.title}</span>
-                        <span className="font-mono-numbers text-[11px] text-amber-300 font-bold flex items-center gap-0.5">
-                          <Fire size={12} weight="fill" /> ~{item.workout.kcalBurn} kcal
+                        <span className="font-mono-numbers text-[11px] text-rose-300 font-bold flex items-center gap-0.5">
+                          <Fire size={12} weight="fill" className="text-rose-400" /> ~{item.workout.kcalBurn} kcal
                         </span>
                       </div>
 

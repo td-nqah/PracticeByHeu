@@ -246,7 +246,7 @@ export default function HomePage() {
                     {activeRoutine.fullDayNameVi}
                   </h2>
                   {activeDay === todayKey && (
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.2)]">
+                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.25)]">
                       Hôm nay
                     </span>
                   )}
@@ -270,8 +270,8 @@ export default function HomePage() {
                     <span>{activeRoutine.workout.timeRange}</span>
                   </div>
 
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/15 border border-amber-500/30 text-xs font-medium text-amber-300">
-                    <Fire size={13} weight="fill" className="text-amber-400" />
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs font-medium text-rose-300 shadow-[0_0_12px_rgba(244,63,94,0.15)]">
+                    <Fire size={13} weight="fill" className="text-rose-400" />
                     <span className="font-mono-numbers font-bold">~{activeRoutine.workout.kcalBurn} kcal</span>
                   </div>
 
