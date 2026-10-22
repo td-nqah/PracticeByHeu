@@ -18,7 +18,7 @@ import { DaySelector } from '../components/DaySelector';
 import { WaterTrackerCard } from '../components/WaterTrackerCard';
 import { WorkoutExerciseCard } from '../components/WorkoutExerciseCard';
 import { WeeklyOverviewModal } from '../components/WeeklyOverviewModal';
-import { RainBackground } from '../components/RainBackground';
+import { StarfieldBackground } from '../components/StarfieldBackground';
 
 // Map JS Date.getDay() (0=Sun) to DayKey
 const DAY_MAP: Record<number, DayKey> = {
@@ -153,8 +153,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-[100dvh] bg-transparent text-[#F9FAFB] flex flex-col font-sans relative selection:bg-[#5E6AD2]/30 selection:text-[#C4B5FD] overflow-x-hidden">
-      {/* Black Rain Background Animation Effect */}
-      <RainBackground />
+      {/* Starfield Parallax Background Effect */}
+      <StarfieldBackground />
 
       {/* Top Glass Navigation Bar */}
       <header className="sticky top-0 z-30 border-b border-white/[0.08] bg-[#080A10]/80 backdrop-blur-xl">
@@ -202,7 +202,7 @@ export default function HomePage() {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 relative z-10">
         {/* Day Selector Dock */}
         <DaySelector
           routines={WEEKLY_ROUTINES}
