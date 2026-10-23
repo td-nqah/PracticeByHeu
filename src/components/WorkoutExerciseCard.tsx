@@ -194,18 +194,13 @@ export function WorkoutExerciseCard({
                       {getEquipmentIcon(currentExercise.equipment)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                        <span className="font-mono-numbers text-[11px] sm:text-xs font-bold text-[#818CF8] bg-[#5E6AD2]/15 px-2 py-0.5 rounded-md border border-[#5E6AD2]/30 shrink-0">
-                          Card #{safeIndex + 1}
-                        </span>
-                        <h4
-                          className={`text-sm sm:text-base font-bold leading-snug break-words ${
-                            isCurrentExDone ? 'line-through text-stone-500' : 'text-white'
-                          }`}
-                        >
-                          {currentExercise.name}
-                        </h4>
-                      </div>
+                      <h4
+                        className={`text-sm sm:text-base font-bold leading-snug break-words ${
+                          isCurrentExDone ? 'line-through text-stone-500' : 'text-white'
+                        }`}
+                      >
+                        {currentExercise.name}
+                      </h4>
                       <div className="mt-1 flex items-center gap-2">
                         <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-md bg-[#212638] border border-white/[0.08] text-indigo-300">
                           {currentExercise.target}
