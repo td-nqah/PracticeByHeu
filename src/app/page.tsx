@@ -214,8 +214,8 @@ export default function HomePage() {
 
         {/* Core 2-Column Bento Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
-          {/* CỘT TRÁI: KHUNG GIỜ UỐNG NƯỚC (Chiều dài bằng đúng 2 card bên phải, vuốt/cuộn để xem) */}
-          <div className="lg:col-span-5 h-full w-full">
+          {/* CỘT NƯỚC: Trên điện thoại đẩy xuống cuối cùng (order-2 lg:order-1), Trên máy tính nằm cột trái */}
+          <div className="order-2 lg:order-1 lg:col-span-5 h-full w-full">
             <WaterTrackerCard
               dayKey={activeDay}
               dayLabelVi={activeRoutine.dayLabelVi}
@@ -223,8 +223,8 @@ export default function HomePage() {
             />
           </div>
 
-          {/* CỘT PHẢI: KẾ HOẠCH CHI TIẾT (THU GỌN) + BÀI TẬP CAROUSEL */}
-          <div ref={rightColumnRef} className="lg:col-span-7 space-y-4 sm:space-y-5 w-full">
+          {/* CỘT BÀI TẬP: Trên điện thoại hiển thị lên trước (order-1 lg:order-2), Trên máy tính nằm cột phải */}
+          <div ref={rightColumnRef} className="order-1 lg:order-2 lg:col-span-7 space-y-4 sm:space-y-5 w-full">
             {/* Card 1: Kế Hoạch Chi Tiết (Thu gọn, dài ngang bằng card bài tập) */}
             <div className="p-5 sm:p-6 rounded-3xl bg-[#0E111A]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] relative overflow-hidden">
               {/* Subtle top glow line */}
