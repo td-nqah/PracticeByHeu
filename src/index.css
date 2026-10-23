@@ -38,7 +38,7 @@
     scroll-behavior: smooth;
     color-scheme: dark;
     font-family: 'Times New Roman', Times, 'Nimbus Roman No9 L', 'Liberation Serif', serif;
-    font-size: 14pt;
+    font-size: 15pt;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -49,7 +49,7 @@
     background-color: #000000;
     color: var(--text-primary);
     font-family: 'Times New Roman', Times, 'Nimbus Roman No9 L', 'Liberation Serif', serif;
-    font-size: 14pt;
+    font-size: 15pt;
     line-height: 1.5;
     font-weight: 400;
     min-height: 100dvh;
@@ -63,13 +63,13 @@
     line-height: 1.5 !important;
   }
 
-  /* Nội dung (Paragraphs): Chữ thường (regular 400), cỡ chữ 14, spacing 1.5, thụt lề đầu dòng first line 1.27cm */
+  /* Nội dung (Paragraphs): Chữ thường (regular 400), cỡ chữ 15, spacing 1.5, thụt lề đầu dòng first line 1cm */
   p, .content-p {
     font-family: 'Times New Roman', Times, 'Nimbus Roman No9 L', 'Liberation Serif', serif;
     font-weight: 400;
-    font-size: 14pt;
+    font-size: 15pt;
     line-height: 1.5;
-    text-indent: 1.27cm;
+    text-indent: 1cm;
   }
 
   /* Giữ các thành phần UI (buttons, badges, nav, inputs) không bị thụt lề */
