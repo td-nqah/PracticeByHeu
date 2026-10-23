@@ -130,11 +130,11 @@ export function WeeklyOverviewModal({
                       </div>
 
                       {/* Water Hydration row */}
-                      <div className="flex items-center gap-2 text-xs text-stone-300 mb-1.5 p-2 rounded-xl bg-[#141A28] border border-cyan-500/20">
-                        <Drop size={16} weight="fill" className="text-cyan-400 flex-shrink-0" />
-                        <span className="font-bold text-cyan-300/80">Nước:</span>
+                      <div className="flex items-center gap-2 text-xs text-stone-300 mb-1.5 p-2 rounded-xl bg-[#141A28] border border-[#1B98E0]/30">
+                        <Drop size={16} weight="fill" className="text-[#1B98E0] flex-shrink-0" />
+                        <span className="font-bold text-[#1B98E0]">Nước:</span>
                         <span className="font-medium truncate flex-1">{waterPlan.modeName}</span>
-                        <span className="font-mono-numbers text-[11px] text-cyan-300 font-bold">
+                        <span className="font-mono-numbers text-[11px] text-[#1B98E0] font-bold">
                           {waterPlan.dailyTargetMl.toLocaleString('vi-VN')} ml
                         </span>
                       </div>

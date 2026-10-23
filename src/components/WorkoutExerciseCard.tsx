@@ -74,7 +74,7 @@ export function WorkoutExerciseCard({
       case 'dumbbell':
         return <Barbell size={20} weight="fill" className="text-[#818CF8]" />;
       case 'swim':
-        return <Waves size={20} weight="fill" className="text-cyan-400" />;
+        return <Waves size={20} weight="fill" className="text-[#1B98E0]" />;
       case 'jump-rope':
         return <SneakerMove size={20} weight="fill" className="text-amber-400" />;
       case 'treadmill':

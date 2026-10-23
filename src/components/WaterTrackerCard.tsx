@@ -78,12 +78,12 @@ export function WaterTrackerCard({
       case 'beverage':
         return <Coffee size={15} weight="fill" className="text-purple-400" />;
       case 'workout-hydration':
-        return <Waves size={15} weight="fill" className="text-cyan-400" />;
+        return <Waves size={15} weight="fill" className="text-[#1B98E0]" />;
       case 'bedtime':
         return <Moon size={15} weight="fill" className="text-indigo-400" />;
       case 'pure-water':
       default:
-        return <Drop size={15} weight="fill" className="text-blue-400" />;
+        return <Drop size={15} weight="fill" className="text-[#1B98E0]" />;
     }
   };
 
@@ -96,8 +96,8 @@ export function WaterTrackerCard({
       }
       className="relative overflow-hidden rounded-3xl bg-[#0E111A]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] transition-all duration-200 flex flex-col h-full max-h-[580px] lg:max-h-none"
     >
-      {/* Top ambient glow line: Cyan to Deep Indigo */}
-      <div className="h-1.5 w-full bg-gradient-to-r from-cyan-400 via-[#818CF8] to-[#5E6AD2] flex-shrink-0" />
+      {/* Top ambient glow line: #1B98E0 to Deep Indigo */}
+      <div className="h-1.5 w-full bg-gradient-to-r from-[#1B98E0] via-[#38ACF2] to-[#5E6AD2] flex-shrink-0" />
 
       {/* ======================================================== */}
       {/* HEADER SECTION (FIXED AT TOP, DOES NOT SCROLL)          */}
@@ -105,12 +105,12 @@ export function WaterTrackerCard({
       <div className="p-5 sm:p-6 pb-2.5 space-y-3 flex-shrink-0">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)] flex-shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-[#1B98E0]/15 border border-[#1B98E0]/30 flex items-center justify-center text-[#1B98E0] shadow-[0_0_15px_rgba(27,152,224,0.3)] flex-shrink-0">
               <Drop size={22} weight="fill" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-400">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#1B98E0]">
                   HYDRATION SCHEDULE
                 </span>
                 <span className="text-stone-600">•</span>
@@ -127,10 +127,10 @@ export function WaterTrackerCard({
           {/* Urine Color Test Button */}
           <button
             onClick={() => setIsUrineModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141824] hover:bg-[#1C2234] border border-white/[0.08] hover:border-cyan-500/40 text-xs font-semibold text-stone-300 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95 flex-shrink-0"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141824] hover:bg-[#1C2234] border border-white/[0.08] hover:border-[#1B98E0]/50 text-xs font-semibold text-stone-300 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95 flex-shrink-0"
             title="Thước đo kiểm tra màu nước tiểu"
           >
-            <Eye size={15} weight="bold" className="text-cyan-400" />
+            <Eye size={15} weight="bold" className="text-[#1B98E0]" />
             <span>Màu nước tiểu</span>
           </button>
         </div>
@@ -139,10 +139,10 @@ export function WaterTrackerCard({
         <div className="p-3 rounded-2xl bg-[#141824]/90 border border-white/[0.06] space-y-2 text-xs">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)] flex-shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-[#1B98E0] animate-pulse shadow-[0_0_8px_rgba(27,152,224,0.9)] flex-shrink-0" />
               <span className="font-bold text-white truncate">{plan.modeName}</span>
             </div>
-            <span className="text-cyan-400 font-bold font-mono-numbers text-[11px] flex-shrink-0">
+            <span className="text-[#1B98E0] font-bold font-mono-numbers text-[11px] flex-shrink-0">
               3.200 ml/ngày
             </span>
           </div>
@@ -168,10 +168,10 @@ export function WaterTrackerCard({
         {/* Subhead with scroll hint */}
         <div className="flex items-center justify-between px-1 pt-1">
           <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
-            <Clock size={13} weight="bold" className="text-cyan-400" />
+            <Clock size={13} weight="bold" className="text-[#1B98E0]" />
             <span>Lịch trình nạp nước trong ngày</span>
           </h3>
-          <span className="text-[10px] font-medium text-cyan-400/80 flex items-center gap-0.5">
+          <span className="text-[10px] font-medium text-[#1B98E0] flex items-center gap-0.5">
             <span>Vuốt để xem</span>
             <CaretDown size={11} weight="bold" className="animate-bounce" />
           </span>
@@ -190,7 +190,7 @@ export function WaterTrackerCard({
               key={slot.id}
               className={`group relative p-2.5 sm:p-3 rounded-2xl border transition-all flex items-start justify-between gap-3 ${
                 isCurrent
-                  ? 'bg-[#141A28] border-cyan-500/40 shadow-[0_0_20px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500/30'
+                  ? 'bg-[#141C2B] border-[#1B98E0]/50 shadow-[0_0_20px_rgba(27,152,224,0.2)] ring-1 ring-[#1B98E0]/40'
                   : 'bg-[#121520]/80 border-white/[0.06] hover:bg-[#161B28] hover:border-white/[0.1]'
               }`}
             >
@@ -205,7 +205,7 @@ export function WaterTrackerCard({
                     {/* Time Range */}
                     <span
                       className={`font-mono-numbers text-xs font-black tracking-tight ${
-                        isCurrent ? 'text-cyan-300' : 'text-white'
+                        isCurrent ? 'text-[#1B98E0]' : 'text-white'
                       }`}
                     >
                       {slot.timeRange}
@@ -213,7 +213,7 @@ export function WaterTrackerCard({
 
                     {/* Current Slot Badge */}
                     {isCurrent && (
-                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 animate-pulse">
+                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#1B98E0]/20 text-[#1B98E0] border border-[#1B98E0]/40 animate-pulse">
                         Đang diễn ra
                       </span>
                     )}
@@ -296,7 +296,7 @@ export function WaterTrackerCard({
             >
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                  <div className="w-8 h-8 rounded-xl bg-[#1B98E0]/15 border border-[#1B98E0]/30 flex items-center justify-center text-[#1B98E0]">
                     <Eye size={18} weight="fill" />
                   </div>
                   <div>
@@ -356,14 +356,14 @@ export function WaterTrackerCard({
                 </div>
 
                 {/* Level 3: Over-hydrated (Clear Transparent) */}
-                <div className="p-3.5 rounded-2xl bg-[#141822] border border-cyan-500/30 flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#F0F9FF] border-2 border-[#BAE6FD] shadow-[0_0_12px_rgba(186,230,253,0.5)] flex-shrink-0" />
+                <div className="p-3.5 rounded-2xl bg-[#141822] border border-[#1B98E0]/30 flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-[#F0F9FF] border-2 border-[#1B98E0]/40 shadow-[0_0_12px_rgba(27,152,224,0.4)] flex-shrink-0" />
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-extrabold text-cyan-300 uppercase tracking-wider">
+                      <span className="text-xs font-extrabold text-[#1B98E0] uppercase tracking-wider">
                         Trong suốt hoàn toàn
                       </span>
-                      <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-cyan-500/20 text-cyan-300">
+                      <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-[#1B98E0]/20 text-[#1B98E0]">
                         Uống quá dồn dập
                       </span>
                     </div>

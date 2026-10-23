@@ -260,8 +260,8 @@ export default function HomePage() {
 
                 {/* Telemetry Chips */}
                 <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-xs font-medium text-cyan-300">
-                    <Drop size={14} weight="fill" className="text-cyan-400" />
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#1B98E0]/15 border border-[#1B98E0]/30 text-xs font-medium text-[#1B98E0]">
+                    <Drop size={14} weight="fill" className="text-[#1B98E0]" />
                     <span>Nước: 3.200 ml/ngày</span>
                   </div>
 
