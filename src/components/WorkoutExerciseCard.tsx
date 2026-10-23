@@ -87,7 +87,6 @@ export function WorkoutExerciseCard({
   };
 
   const isCurrentExDone = !!progress[`${dayKey}-ex-${currentExercise?.id}`];
-  const setsCount = currentExercise?.setsCount || 3;
 
   return (
     <div
@@ -224,7 +223,7 @@ export function WorkoutExerciseCard({
                 </div>
 
                 {/* Technique tip */}
-                <div className="p-3 rounded-xl bg-[#10131E] border border-white/[0.04] text-stone-300 leading-relaxed mb-3">
+                <div className={`p-3 rounded-xl bg-[#10131E] border border-white/[0.04] text-stone-300 leading-relaxed ${currentExercise.kneeSafetyNote ? 'mb-3' : ''}`}>
                   <strong className="text-[#818CF8] font-semibold block mb-1">
                     Kỹ thuật thực hiện:
                   </strong>
@@ -233,7 +232,7 @@ export function WorkoutExerciseCard({
 
                 {/* Knee safety note */}
                 {currentExercise.kneeSafetyNote && (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 mb-3 flex items-start gap-2">
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-start gap-2">
                     <ShieldCheck size={16} weight="fill" className="text-emerald-400 flex-shrink-0 mt-1" />
                     <div>
                       <strong className="font-semibold block mb-0.5">Bảo vệ khớp gối:</strong>
@@ -242,46 +241,7 @@ export function WorkoutExerciseCard({
                   </div>
                 )}
 
-                {/* Interactive Set Checkboxes */}
-                {setsCount && setsCount <= 10 && (
-                  <div className="pt-2.5 border-t border-white/[0.06]">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
-                        Đánh dấu từng hiệp tập:
-                      </span>
-                      <span className="text-[10px] text-stone-500 font-medium">
-                        {setsCount} hiệp
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-3 sm:flex sm:flex-wrap items-center gap-2">
-                      {Array.from({ length: setsCount }).map((_, sIdx) => {
-                        const setKey = `${dayKey}-ex-${currentExercise.id}-s${sIdx}`;
-                        const isSetDone = isCurrentExDone || !!progress[setKey];
 
-                        return (
-                          <div
-                            key={sIdx}
-                            onClick={() => onToggleSet(currentExercise.id, sIdx)}
-                            className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border active:scale-95 min-w-0 ${
-                              isSetDone
-                                ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
-                                : 'bg-[#181D2B] hover:bg-[#23293D] text-stone-300 border-white/[0.08]'
-                            }`}
-                          >
-                            <AnimatedCheckbox
-                              checked={isSetDone}
-                              onChange={() => onToggleSet(currentExercise.id, sIdx)}
-                              size="0.95em"
-                            />
-                            <span className="whitespace-nowrap font-medium text-[11px] sm:text-xs">
-                              Hiệp {sIdx + 1}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
               </motion.div>
             )}
           </AnimatePresence>
