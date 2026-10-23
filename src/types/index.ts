@@ -2,23 +2,51 @@
 
 export type DayKey = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
 
+export type EquipmentType =
+  | 'dumbbell'
+  | 'resistance-band'
+  | 'bodyweight'
+  | 'jump-rope'
+  | 'swim'
+  | 'treadmill'
+  | 'mobility';
+
 export interface ExerciseItem {
   id: string;
   name: string;
-  target: string; // e.g. "3 hiệp x 12 lần", "60 phút liên tục", "10 hiệp (1p on / 1p off)"
+  target: string; // e.g. "4 hiệp × 12–15 lần", "3 hiệp Superset × 15 lần", "8–10 vòng"
   setsCount?: number;
-  equipment: 'dumbbell' | 'bodyweight' | 'jump-rope' | 'swim' | 'treadmill' | 'mobility';
+  equipment: EquipmentType;
+  equipmentLabel?: string; // e.g. "Tạ tay 5kg", "Dây kháng lực", "Hồ bơi", "Dây nhảy + Thảm"
+  restSeconds?: number; // e.g. 45, 60, 75, 90
+  restTimeLabel?: string; // e.g. "75 – 90 giây", "45 – 60 giây", "60 giây", "45 giây"
+  purpose?: string; // e.g. "Cải thiện gù lưng, mở rộng khung ngực sau nhiều giờ ngồi học"
   kneeSafetyNote?: string;
   techniqueTip: string;
 }
 
+export type WorkoutIntensity =
+  | 'Rất nhẹ'
+  | 'Nhẹ'
+  | 'Vừa phải'
+  | 'Vừa – Cao'
+  | 'Cao'
+  | 'Phục hồi'
+  | 'Nhẹ nhàng'
+  | 'Vừa sức'
+  | 'Tập trung'
+  | 'Cường độ cao';
+
 export interface WorkoutSession {
   timeRange: string;
   title: string;
+  objective?: string; // "Mục tiêu bài tập"
+  equipmentSummary?: string; // "Thiết bị: Tạ 5kg / Dây kháng lực / Hồ bơi"
   kcalBurn: number;
-  intensity: 'Nhẹ nhàng' | 'Vừa sức' | 'Tập trung' | 'Cường độ cao';
+  intensity: WorkoutIntensity;
   kneeFriendlyLevel: 'Tối đa' | 'Rất an toàn' | 'Cần chú ý';
   kneeWarning?: string;
+  restNote?: string; // "Thời gian nghỉ" e.g. "Không ngắt quãng, duy trì nhịp tim nhẹ nhàng (<110 bpm)"
   exercises: ExerciseItem[];
 }
 

@@ -10,15 +10,21 @@ import {
   ShieldCheck,
   Drop,
   Barbell,
+  Clock,
+  Target,
+  Wrench,
+  Gauge,
+  CheckCircle,
 } from '@phosphor-icons/react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { WEEKLY_ROUTINES } from '../data/schedule';
-import type { DayKey, RoutineProgress } from '../types';
+import type { DayKey, RoutineProgress, WorkoutIntensity } from '../types';
 import { DaySelector } from '../components/DaySelector';
 import { WaterTrackerCard } from '../components/WaterTrackerCard';
 import { WorkoutExerciseCard } from '../components/WorkoutExerciseCard';
 import { WeeklyOverviewModal } from '../components/WeeklyOverviewModal';
 import { StarfieldBackground } from '../components/StarfieldBackground';
+import { AnimatedCheckbox } from '../components/AnimatedCheckbox';
 
 // Map JS Date.getDay() (0=Sun) to DayKey
 const DAY_MAP: Record<number, DayKey> = {
@@ -57,6 +63,11 @@ export default function HomePage() {
     [activeDay]
   );
 
+  const isDayCompleted = useMemo(
+    () => activeRoutine.workout.exercises.every((ex) => !!progress[`${activeDay}-ex-${ex.id}`]),
+    [activeRoutine, activeDay, progress]
+  );
+
   // Toggle master exercise completion
   const handleToggleExercise = (exerciseId: string) => {
     const exKey = `${activeDay}-ex-${exerciseId}`;
@@ -70,6 +81,29 @@ export default function HomePage() {
       for (let s = 0; s < setsCount; s++) {
         updated[`${activeDay}-ex-${exerciseId}-s${s}`] = nextState;
       }
+      return updated;
+    });
+  };
+
+  // Toggle entire day completion
+  const handleToggleDay = (dayKey: DayKey) => {
+    const routine = WEEKLY_ROUTINES.find((r) => r.day === dayKey);
+    if (!routine) return;
+
+    const allCurrentlyDone = routine.workout.exercises.every(
+      (ex) => !!progress[`${dayKey}-ex-${ex.id}`]
+    );
+    const nextState = !allCurrentlyDone;
+
+    setProgress((prev) => {
+      const updated = { ...prev };
+      routine.workout.exercises.forEach((ex) => {
+        updated[`${dayKey}-ex-${ex.id}`] = nextState;
+        const setsCount = ex.setsCount || 3;
+        for (let s = 0; s < setsCount; s++) {
+          updated[`${dayKey}-ex-${ex.id}-s${s}`] = nextState;
+        }
+      });
       return updated;
     });
   };
@@ -151,6 +185,29 @@ export default function HomePage() {
     };
   }, [activeDay]);
 
+  const getIntensityBadgeClass = (intensity: WorkoutIntensity) => {
+    switch (intensity) {
+      case 'Rất nhẹ':
+        return 'bg-slate-500/15 text-slate-300 border-slate-500/30';
+      case 'Nhẹ':
+      case 'Nhẹ nhàng':
+        return 'bg-sky-500/15 text-sky-300 border-sky-500/30';
+      case 'Vừa phải':
+      case 'Vừa sức':
+        return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+      case 'Vừa – Cao':
+      case 'Tập trung':
+        return 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+      case 'Cao':
+      case 'Cường độ cao':
+        return 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+      case 'Phục hồi':
+        return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
+      default:
+        return 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30';
+    }
+  };
+
   return (
     <div className="min-h-[100dvh] bg-transparent text-[#F9FAFB] flex flex-col font-sans relative selection:bg-[#5E6AD2]/30 selection:text-[#C4B5FD] overflow-x-hidden">
       {/* Starfield Parallax Background Effect */}
@@ -174,7 +231,7 @@ export default function HomePage() {
                 </span>
               </div>
               <p className="text-[11px] text-stone-400 font-medium leading-none mt-1 hidden sm:block">
-                Lịch Uống Nước & Kế Hoạch Luyện Tập Hàng Ngày
+                Lịch Uống Nước & Kế Hoạch Luyện Tập Hàng Ngày (Nam 19t • 90kg)
               </p>
             </div>
           </div>
@@ -186,8 +243,8 @@ export default function HomePage() {
               className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-2xl bg-[#141824] hover:bg-[#1C2234] border border-white/[0.08] hover:border-[#818CF8]/40 text-xs font-bold text-stone-200 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95"
             >
               <ListBullets size={15} weight="bold" className="text-[#818CF8]" />
-              <span className="hidden sm:inline">Lịch cả tuần</span>
-              <span className="sm:hidden">Tuần</span>
+              <span className="hidden sm:inline">Lịch 7 ngày cả tuần</span>
+              <span className="sm:hidden">7 Ngày</span>
             </button>
 
             <button
@@ -225,12 +282,12 @@ export default function HomePage() {
 
           {/* CỘT BÀI TẬP: Trên điện thoại hiển thị lên trước (order-1 lg:order-2), Trên máy tính nằm cột phải */}
           <div ref={rightColumnRef} className="order-1 lg:order-2 lg:col-span-7 space-y-4 sm:space-y-5 w-full">
-            {/* Card 1: Kế Hoạch Chi Tiết (Thu gọn, dài ngang bằng card bài tập) */}
+            {/* Card 1: Kế Hoạch Chi Tiết */}
             <div className="p-5 sm:p-6 rounded-3xl bg-[#0E111A]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] relative overflow-hidden">
               {/* Subtle top glow line */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#5E6AD2] via-[#818CF8] to-[#10B981] opacity-70" />
 
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#818CF8] flex items-center gap-1.5">
                     <Sparkle size={13} weight="fill" />
@@ -241,15 +298,39 @@ export default function HomePage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                    {activeRoutine.fullDayNameVi}
-                  </h2>
-                  {activeDay === todayKey && (
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.25)]">
-                      Hôm nay
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                      {activeRoutine.fullDayNameVi}
+                    </h2>
+                    {activeDay === todayKey && (
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.25)]">
+                        Hôm nay
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Master Checkbox: Đánh dấu hoàn thành toàn bộ ngày (Lưu LocalStorage) */}
+                  <div
+                    onClick={() => handleToggleDay(activeDay)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#141824] hover:bg-[#1A2030] border border-white/[0.08] hover:border-[#818CF8]/40 transition-all cursor-pointer shadow-xs active:scale-95"
+                  >
+                    <AnimatedCheckbox
+                      checked={isDayCompleted}
+                      onChange={() => handleToggleDay(activeDay)}
+                      size="1.05em"
+                      title="Đánh dấu hoàn thành toàn bộ bài tập ngày này"
+                    />
+                    <span className="text-xs font-bold text-stone-200">
+                      {isDayCompleted ? (
+                        <span className="text-emerald-400 flex items-center gap-1">
+                          <CheckCircle size={13} weight="fill" /> Đã xong toàn bộ ngày!
+                        </span>
+                      ) : (
+                        'Đánh dấu xong ngày'
+                      )}
                     </span>
-                  )}
+                  </div>
                 </div>
 
                 {activeRoutine.motivationalQuote && (
@@ -258,16 +339,56 @@ export default function HomePage() {
                   </p>
                 )}
 
-                {/* Telemetry Chips */}
-                <div className="flex flex-wrap items-center gap-2 pt-1">
+                {/* ======================================================== */}
+                {/* 4 TAGS CHÍNH YÊU CẦU: Khung giờ, Mục tiêu, Cường độ, Thiết bị */}
+                {/* ======================================================== */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  {/* 1. Tag Khung giờ */}
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#141824] border border-white/[0.06] text-xs">
+                    <Clock size={16} weight="bold" className="text-[#818CF8] shrink-0" />
+                    <div>
+                      <span className="text-stone-400 font-semibold block text-[11px]">Khung giờ:</span>
+                      <strong className="text-white font-mono-numbers">{activeRoutine.workout.timeRange}</strong>
+                    </div>
+                  </div>
+
+                  {/* 2. Tag Cường độ */}
+                  <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs ${getIntensityBadgeClass(activeRoutine.workout.intensity)}`}>
+                    <Gauge size={16} weight="bold" className="shrink-0" />
+                    <div>
+                      <span className="opacity-75 font-semibold block text-[11px]">Cường độ:</span>
+                      <strong className="text-white">{activeRoutine.workout.intensity}</strong>
+                    </div>
+                  </div>
+
+                  {/* 3. Tag Thiết bị */}
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#141824] border border-white/[0.06] text-xs sm:col-span-2">
+                    <Wrench size={16} weight="bold" className="text-cyan-400 shrink-0" />
+                    <div>
+                      <span className="text-stone-400 font-semibold block text-[11px]">Thiết bị tập luyện:</span>
+                      <strong className="text-cyan-200">
+                        {activeRoutine.workout.equipmentSummary || 'Tạ 5kg / Dây kháng lực / Hồ bơi'}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* 4. Tag Mục tiêu bài tập */}
+                  {activeRoutine.workout.objective && (
+                    <div className="flex items-start gap-2 p-2.5 rounded-xl bg-[#101422] border border-[#5E6AD2]/20 text-xs sm:col-span-2">
+                      <Target size={16} weight="bold" className="text-[#818CF8] shrink-0 mt-0.5" />
+                      <div>
+                        <span className="text-[#818CF8] font-semibold block text-[11px]">Mục tiêu bài tập:</span>
+                        <p className="text-stone-200 leading-snug">{activeRoutine.workout.objective}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Sub Telemetry Chips: Nước, Calo, Bảo vệ gối */}
+                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-white/[0.06]">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#1B98E0]/15 border border-[#1B98E0]/30 text-xs font-medium text-[#1B98E0]">
                     <Drop size={14} weight="fill" className="text-[#1B98E0]" />
                     <span>Nước: 3.200 ml/ngày</span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#161B28] border border-white/[0.06] text-xs font-medium text-stone-200">
-                    <Barbell size={14} weight="bold" className="text-stone-300" />
-                    <span>{activeRoutine.workout.timeRange}</span>
                   </div>
 
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs font-medium text-rose-300 shadow-[0_0_12px_rgba(244,63,94,0.15)]">
@@ -283,7 +404,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Card 2: BÀI TẬP PHẢI THỰC HIỆN */}
+            {/* Card 2: BÀI TẬP PHẢI THỰC HIỆN KÈM BỘ ĐẾM NGHỈ & BANNER AN TOÀN */}
             <WorkoutExerciseCard
               workout={activeRoutine.workout}
               dayKey={activeDay}
@@ -305,6 +426,7 @@ export default function HomePage() {
         activeDay={activeDay}
         onSelectDay={setActiveDay}
         progress={progress}
+        onToggleDay={handleToggleDay}
       />
 
       {/* Footer in Glass Finish */}
@@ -315,7 +437,7 @@ export default function HomePage() {
             <span>Tiến độ học và tập tự động lưu trữ trên LocalStorage theo từng ngày.</span>
           </p>
           <p className="text-stone-500">
-            PracticeByHeu • Cyber Rain Dark Theme • Tối ưu thể trọng 90kg & bảo vệ khớp gối.
+            PracticeByHeu • Cyber Rain Dark Theme • Tối ưu thể trọng 90kg & bảo vệ sụn gối.
           </p>
         </div>
       </footer>

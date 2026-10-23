@@ -1,5 +1,5 @@
 // src/components/WorkoutExerciseCard.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Barbell,
@@ -13,9 +13,17 @@ import {
   CaretLeft,
   CaretRight,
   ListBullets,
+  Timer,
+  Play,
+  Pause,
+  ArrowCounterClockwise,
+  Lightning,
+  Clock,
+  X,
 } from '@phosphor-icons/react';
 import type { WorkoutSession, ExerciseItem, DayKey, RoutineProgress } from '../types';
 import { AnimatedCheckbox } from './AnimatedCheckbox';
+import { playChimeSound } from '../utils/audio';
 
 interface WorkoutExerciseCardProps {
   workout: WorkoutSession;
@@ -32,18 +40,26 @@ export function WorkoutExerciseCard({
   dayLabelVi,
   progress,
   onToggleExercise,
-  onToggleSet,
 }: WorkoutExerciseCardProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
 
+  // Rest Timer State
+  const [isTimerOpen, setIsTimerOpen] = useState(false);
+  const [totalSeconds, setTotalSeconds] = useState(60);
+  const [secondsLeft, setSecondsLeft] = useState(60);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [timerAlert, setTimerAlert] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
   // Reset to first exercise when day changes
   useEffect(() => {
     setCurrentIndex(0);
+    setIsTimerOpen(false);
+    setIsTimerRunning(false);
   }, [dayKey]);
 
   const totalCards = workout.exercises.length;
-  // Guard against out-of-bounds
   const safeIndex = Math.min(currentIndex, Math.max(0, totalCards - 1));
   const currentExercise = workout.exercises[safeIndex] || workout.exercises[0];
 
@@ -69,10 +85,64 @@ export function WorkoutExerciseCard({
     }
   };
 
+  // Start rest timer with specific duration
+  const handleStartRest = (secs: number) => {
+    const validSecs = secs > 0 ? secs : 60;
+    setTotalSeconds(validSecs);
+    setSecondsLeft(validSecs);
+    setIsTimerRunning(true);
+    setTimerAlert(false);
+    setIsTimerOpen(true);
+  };
+
+  // Timer tick effect
+  useEffect(() => {
+    if (isTimerRunning && secondsLeft > 0) {
+      timerRef.current = window.setTimeout(() => {
+        setSecondsLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (isTimerRunning && secondsLeft === 0) {
+      setIsTimerRunning(false);
+      setTimerAlert(true);
+      playChimeSound();
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        try {
+          navigator.vibrate([200, 100, 200, 100, 300]);
+        } catch {
+          // ignore if vibration blocked
+        }
+      }
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [isTimerRunning, secondsLeft]);
+
+  const toggleTimerRunning = () => {
+    if (secondsLeft === 0) {
+      setSecondsLeft(totalSeconds);
+      setIsTimerRunning(true);
+      setTimerAlert(false);
+    } else {
+      setIsTimerRunning(!isTimerRunning);
+    }
+  };
+
+  const resetTimer = () => {
+    setIsTimerRunning(false);
+    setSecondsLeft(totalSeconds);
+    setTimerAlert(false);
+  };
+
+  const timerProgressPct =
+    totalSeconds > 0 ? ((totalSeconds - secondsLeft) / totalSeconds) * 100 : 0;
+
   const getEquipmentIcon = (equipment: ExerciseItem['equipment']) => {
     switch (equipment) {
       case 'dumbbell':
         return <Barbell size={20} weight="fill" className="text-[#818CF8]" />;
+      case 'resistance-band':
+        return <Lightning size={20} weight="fill" className="text-cyan-400" />;
       case 'swim':
         return <Waves size={20} weight="fill" className="text-[#1B98E0]" />;
       case 'jump-rope':
@@ -87,6 +157,11 @@ export function WorkoutExerciseCard({
   };
 
   const isCurrentExDone = !!progress[`${dayKey}-ex-${currentExercise?.id}`];
+
+  // Default rest duration for current exercise
+  const currentRestSeconds = currentExercise?.restSeconds && currentExercise.restSeconds > 0
+    ? currentExercise.restSeconds
+    : 60;
 
   return (
     <div
@@ -180,16 +255,16 @@ export function WorkoutExerciseCard({
                   x: slideDirection === 'right' ? -30 : 30,
                 }}
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                className={`p-5 rounded-2xl border transition-all ${
+                className={`p-5 rounded-2xl border transition-all space-y-3.5 ${
                   isCurrentExDone
                     ? 'bg-[#101A1F] border-emerald-500/30'
                     : 'bg-[#141824] border-white/[0.08]'
                 }`}
               >
                 {/* Top Info of the Exercise */}
-                <div className="flex items-start justify-between gap-2.5 sm:gap-3 mb-3.5">
+                <div className="flex items-start justify-between gap-2.5 sm:gap-3">
                   <div className="flex items-start gap-2.5 sm:gap-3 min-w-0 flex-1">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#1F2332] border border-white/[0.08] flex items-center justify-center flex-shrink-0 shadow-xs mt-0.5">
+                    <div className="w-10 h-10 rounded-xl bg-[#1F2332] border border-white/[0.08] flex items-center justify-center flex-shrink-0 shadow-xs mt-0.5">
                       {getEquipmentIcon(currentExercise.equipment)}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -200,15 +275,30 @@ export function WorkoutExerciseCard({
                       >
                         {currentExercise.name}
                       </h4>
-                      <div className="mt-1 flex items-center gap-2">
+
+                      {/* Badges: Target, Equipment, Purpose */}
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-md bg-[#212638] border border-white/[0.08] text-indigo-300">
                           {currentExercise.target}
                         </span>
+
+                        {currentExercise.equipmentLabel && (
+                          <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/25 text-cyan-300">
+                            {currentExercise.equipmentLabel}
+                          </span>
+                        )}
+
+                        {currentExercise.restTimeLabel && (
+                          <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-md bg-violet-500/10 border border-violet-500/25 text-violet-300 flex items-center gap-1">
+                            <Clock size={12} weight="bold" />
+                            Nghỉ: {currentExercise.restTimeLabel}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  {/* Master Checkbox Toggle (Uiverse.io Animated SVG Checkbox) */}
+                  {/* Master Checkbox Toggle */}
                   <div
                     onClick={() => onToggleExercise(currentExercise.id)}
                     className="p-1.5 rounded-xl bg-[#141824] hover:bg-[#1A2030] border border-white/[0.1] hover:border-[#818CF8]/50 transition-all flex items-center justify-center flex-shrink-0 cursor-pointer shadow-xs active:scale-95"
@@ -222,8 +312,42 @@ export function WorkoutExerciseCard({
                   </div>
                 </div>
 
+                {/* Rest Timer Trigger Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-[#111422] border border-violet-500/20">
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="w-6 h-6 rounded-lg bg-[#8B5CF6]/20 text-[#A78BFA] flex items-center justify-center shrink-0">
+                      <Timer size={14} weight="bold" />
+                    </div>
+                    <span className="text-stone-300 font-medium">
+                      Thời gian nghỉ giữa hiệp:{' '}
+                      <strong className="text-violet-300">
+                        {currentExercise.restTimeLabel || `${currentRestSeconds}s`}
+                      </strong>
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => handleStartRest(currentRestSeconds)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:brightness-110 text-white text-xs font-bold transition-all cursor-pointer shadow-[0_0_12px_rgba(139,92,246,0.35)] active:scale-95"
+                  >
+                    <Play size={12} weight="fill" />
+                    <span>Bắt đầu nghỉ ({currentRestSeconds}s)</span>
+                  </button>
+                </div>
+
+                {/* Purpose if present */}
+                {currentExercise.purpose && (
+                  <div className="p-2.5 rounded-xl bg-[#101422] border border-[#5E6AD2]/20 text-xs text-stone-300 leading-relaxed flex items-start gap-2">
+                    <Sparkle size={14} weight="fill" className="text-[#818CF8] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-[#818CF8] font-semibold">Tác dụng: </strong>
+                      <span>{currentExercise.purpose}</span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Technique tip */}
-                <div className={`p-3 rounded-xl bg-[#10131E] border border-white/[0.04] text-stone-300 leading-relaxed ${currentExercise.kneeSafetyNote ? 'mb-3' : ''}`}>
+                <div className="p-3 rounded-xl bg-[#10131E] border border-white/[0.04] text-stone-300 leading-relaxed text-xs sm:text-sm">
                   <strong className="text-[#818CF8] font-semibold block mb-1">
                     Kỹ thuật thực hiện:
                   </strong>
@@ -232,19 +356,152 @@ export function WorkoutExerciseCard({
 
                 {/* Knee safety note */}
                 {currentExercise.kneeSafetyNote && (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-start gap-2">
-                    <ShieldCheck size={16} weight="fill" className="text-emerald-400 flex-shrink-0 mt-1" />
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-start gap-2 text-xs sm:text-sm">
+                    <ShieldCheck size={16} weight="fill" className="text-emerald-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <strong className="font-semibold block mb-0.5">Bảo vệ khớp gối:</strong>
+                      <strong className="font-semibold block mb-0.5">Bảo vệ khớp gối & cột sống:</strong>
                       <p>{currentExercise.kneeSafetyNote}</p>
                     </div>
                   </div>
                 )}
 
+                {/* ======================================================== */}
+                {/* BỘ ĐẾM THỜI GIAN NGHỈ TÍCH HỢP (EXPANDED REST TIMER)     */}
+                {/* ======================================================== */}
+                <AnimatePresence>
+                  {isTimerOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, y: -10 }}
+                      animate={{ opacity: 1, height: 'auto', y: 0 }}
+                      exit={{ opacity: 0, height: 0, y: -10 }}
+                      className="p-3.5 sm:p-4 rounded-2xl bg-[#0F111D] border border-violet-500/30 shadow-[0_0_20px_rgba(139,92,246,0.15)] relative overflow-hidden"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center">
+                            <Timer size={14} weight="fill" />
+                          </div>
+                          <span className="text-xs font-bold text-white uppercase tracking-wider">
+                            Đồng Hồ Nghỉ Giữa Hiệp
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setIsTimerOpen(false)}
+                          className="p-1 rounded-lg text-stone-400 hover:text-white hover:bg-white/[0.05] transition-colors cursor-pointer"
+                        >
+                          <X size={15} weight="bold" />
+                        </button>
+                      </div>
 
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        {/* Circular Progress & Time Display */}
+                        <div className="flex items-center gap-3.5">
+                          <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
+                            <svg className="w-14 h-14 transform -rotate-90">
+                              <circle
+                                cx="28"
+                                cy="28"
+                                r="23"
+                                stroke="currentColor"
+                                strokeWidth="3.5"
+                                className="text-stone-800"
+                                fill="transparent"
+                              />
+                              <circle
+                                cx="28"
+                                cy="28"
+                                r="23"
+                                stroke="currentColor"
+                                strokeWidth="3.5"
+                                strokeDasharray={2 * Math.PI * 23}
+                                strokeDashoffset={2 * Math.PI * 23 * (1 - timerProgressPct / 100)}
+                                strokeLinecap="round"
+                                className="text-[#8B5CF6] drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] transition-all duration-300"
+                                fill="transparent"
+                              />
+                            </svg>
+                            <span className="absolute font-mono-numbers text-xs font-bold text-white">
+                              {secondsLeft}s
+                            </span>
+                          </div>
+
+                          <div>
+                            <p className="text-xs font-bold text-stone-200">
+                              {timerAlert ? (
+                                <span className="text-emerald-400 flex items-center gap-1 animate-pulse">
+                                  🔔 Hết giờ nghỉ! Vào hiệp mới nào!
+                                </span>
+                              ) : isTimerRunning ? (
+                                <span className="text-violet-300">Đang đếm ngược nghỉ ngơi...</span>
+                              ) : (
+                                <span>Tạm dừng / Sẵn sàng</span>
+                              )}
+                            </p>
+                            <p className="text-[11px] text-stone-400 mt-0.5">
+                              Tái nạp ATP và hạ nhịp tim để duy trì thể lực tốt nhất.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Quick preset buttons & Controls */}
+                        <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-auto justify-end">
+                          <div className="flex items-center gap-1">
+                            {[45, 60, 75, 90].map((sec) => (
+                              <button
+                                key={sec}
+                                onClick={() => handleStartRest(sec)}
+                                className={`px-2 py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                                  totalSeconds === sec
+                                    ? 'bg-violet-600 text-white shadow-[0_0_8px_rgba(139,92,246,0.5)]'
+                                    : 'bg-[#1A1E2C] text-stone-400 hover:text-white'
+                                }`}
+                              >
+                                {sec}s
+                              </button>
+                            ))}
+                          </div>
+
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={toggleTimerRunning}
+                              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
+                            >
+                              {isTimerRunning ? <Pause size={13} weight="fill" /> : <Play size={13} weight="fill" />}
+                              <span>{isTimerRunning ? 'Dừng' : 'Tiếp'}</span>
+                            </button>
+                            <button
+                              onClick={resetTimer}
+                              className="p-1.5 rounded-xl bg-[#1A1E2C] hover:bg-[#252B40] text-stone-400 hover:text-white transition-all cursor-pointer"
+                              title="Đặt lại bộ đếm"
+                            >
+                              <ArrowCounterClockwise size={14} weight="bold" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+
+        {/* ======================================================== */}
+        {/* CARD CẢNH BÁO AN TOÀN KHỚP (SAFETY BANNER)               */}
+        {/* ======================================================== */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 via-[#101924]/60 to-cyan-950/30 border border-emerald-500/25 shadow-[0_4px_20px_rgba(16,185,129,0.06)] flex items-start gap-3">
+          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 shadow-[0_0_10px_rgba(16,185,129,0.25)]">
+            <ShieldCheck size={18} weight="fill" />
+          </div>
+          <div className="text-xs sm:text-sm leading-relaxed text-stone-300">
+            <strong className="text-emerald-300 font-bold block mb-0.5">
+              Quy tắc bảo vệ sụn gối cho người 90kg:
+            </strong>
+            <p>
+              Quy tắc người 90kg: Tiếp đất mũi chân khi nhảy dây, không nhảy chân trần trên bê tông. Luôn ưu tiên bơi lội và bài tập dây kháng lực nằm/ngồi để triệt tiêu chấn động lên sụn gối.
+            </p>
+          </div>
         </div>
 
         {/* ======================================================== */}
